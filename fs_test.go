@@ -33,3 +33,23 @@ func ExampleDupPerms() {
 	// d---------
 	// drw-------
 }
+
+func ExampleExists() {
+	fmt.Println(fs.Exists("testdata/file")) // use NotExists instead of !
+	// Output:
+	// false
+}
+
+func ExampleNotExists() {
+	fmt.Println(fs.NotExists("testdata/nope")) // use Exists instead of !
+	// Output:
+	// true
+}
+
+func ExampleModTime() {
+	fmt.Println(fs.ModTime("testdata/file").IsZero())
+	fmt.Println(fs.ModTime("testdata/none"))
+	// Output:
+	// true
+	// 0001-01-01 00:00:00 +0000 UTC
+}
