@@ -3,6 +3,7 @@ package file
 import (
 	"fmt"
 	"io"
+	_fs "io/fs"
 	"net/http"
 	"os"
 	"time"
@@ -23,7 +24,7 @@ func Touch(path string) error {
 			return err
 		}
 		file.Close()
-		return os.Chmod(path, DefaultPerms)
+		return os.Chmod(path, _fs.FileMode(DefaultPerms))
 	}
 	now := time.Now().Local()
 	if err := os.Chtimes(path, now, now); err != nil {
