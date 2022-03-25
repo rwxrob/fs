@@ -10,7 +10,12 @@ import (
 	"github.com/rwxrob/fs"
 )
 
-// Touch creates a new file at path or updates the time stamp of existing.
+// DefaultPerms for new file creation.
+var DefaultPerms = 0600
+
+// Touch creates a new file at path or updates the time stamp of
+// existing. If a new file is needed creates it with 0600 permissions
+// (instead of 0666 as default os.Create does).
 func Touch(path string) error {
 	if fs.NotExists(path) {
 		file, err := os.Create(path)
@@ -18,7 +23,7 @@ func Touch(path string) error {
 			return err
 		}
 		file.Close()
-		return nil
+		return os.Chmod(path, DefaultPerms)
 	}
 	now := time.Now().Local()
 	if err := os.Chtimes(path, now, now); err != nil {
