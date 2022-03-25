@@ -8,6 +8,8 @@ Version](https://img.shields.io/github/go-mod/go-version/rwxrob/fs)](https://tip
 Card](https://goreportcard.com/badge/github.com/rwxrob/fs)](https://goreportcard.com/report/github.com/rwxrob/fs)
 
 * file.Touch
-* file.Exists
-* file.NotExists
+* file.Replace
+* file.Fetch
+* fs.Exists
+* fs.NotExists
 * dir.Entries 
