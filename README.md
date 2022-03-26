@@ -13,3 +13,8 @@ Card](https://goreportcard.com/badge/github.com/rwxrob/fs)](https://goreportcard
 * fs.Exists
 * fs.NotExists
 * dir.Entries 
+* lockedFile.* (from Go internal, proposed public)
+
+## Related
+
+* <https://github.com/golang/go/issues/33974>
