@@ -17,9 +17,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rogpeppe/go-internal/testenv"
+	"github.com/rwxrob/fs/lockedfile/testenv"
 
-	"github.com/rogpeppe/go-internal/lockedfile"
+	"github.com/rwxrob/fs/lockedfile"
 )
 
 func mustTempDir(t *testing.T) (dir string, remove func()) {
