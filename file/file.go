@@ -18,7 +18,8 @@ var DefaultPerms = 0600
 
 // Touch creates a new file at path or updates the time stamp of
 // existing. If a new file is needed creates it with 0600 permissions
-// (instead of 0666 as default os.Create does).
+// (instead of 0666 as default os.Create does). The directory must
+// already exist.
 func Touch(path string) error {
 	if fs.NotExists(path) {
 		file, err := os.Create(path)
@@ -130,17 +131,4 @@ func Edit(path string) error {
 		return execute(ed, path)
 	}
 	return fmt.Errorf("unable to find editor")
-}
-
-// OpenLocked opens a file with lockedfile.Open granting a read/write
-// lock and is safe for all callers across different processes on the
-// current host system. Currently, this is achieved by creating a .lock
-// file at the same location (which has well-documented problems even
-// though several substantial applications including Kubernetes). When
-// the accepted lockedfile proposal is implemented (perhaps in 1.19) the
-// OpenLocked implementation will change to use that.
-// (https://github.com/golang/go/issues/33974)
-func OpenLocked(path string) error {
-	// TODO
-	return nil
 }
