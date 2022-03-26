@@ -6,6 +6,8 @@ import (
 	_fs "io/fs"
 	"net/http"
 	"os"
+	"os/exec"
+	"syscall"
 	"time"
 
 	"github.com/rwxrob/fs"
@@ -86,5 +88,59 @@ func Fetch(from, to string) error {
 		return err
 	}
 
+	return nil
+}
+
+// execute executes the given arguments using a syscall so as to hand over
+// all the associated running process references and resources.
+func execute(args ...string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("missing name of executable")
+	}
+	path, err := exec.LookPath(args[0])
+	if err != nil {
+		return err
+	}
+	// exits the program unless there is an error
+	return syscall.Exec(path, args, os.Environ())
+}
+
+// Edit opens the file at the given path for editing using VISUAL or
+// EDITOR or vi or vim or nano (in that order). Currently, this only
+// supports UNIX-like operating systems.
+func Edit(path string) error {
+	ed := os.Getenv("VISUAL")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed = os.Getenv("EDITOR")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed, _ = exec.LookPath("vi")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed, _ = exec.LookPath("vim")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed, _ = exec.LookPath("nano")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	return fmt.Errorf("unable to find editor")
+}
+
+// OpenLocked opens a file with lockedfile.Open granting a read/write
+// lock and is safe for all callers across different processes on the
+// current host system. Currently, this is achieved by creating a .lock
+// file at the same location (which has well-documented problems even
+// though several substantial applications including Kubernetes). When
+// the accepted lockedfile proposal is implemented (perhaps in 1.19) the
+// OpenLocked implementation will change to use that.
+// (https://github.com/golang/go/issues/33974)
+func OpenLocked(path string) error {
+	// TODO
 	return nil
 }

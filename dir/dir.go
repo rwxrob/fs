@@ -1,11 +1,21 @@
 package dir
 
 import (
+	"io/fs"
 	"os"
 	"path/filepath"
 
 	"github.com/rwxrob/json"
 )
+
+// DefaultPerms are defaults for new directory creation.
+var DefaultPerms = 0700
+
+// Create a new directory with the DefaultPerms creating any new
+// directories as well (see os.MkdirAll)
+func Create(path string) error {
+	return os.MkdirAll(path, fs.FileMode(DefaultPerms))
+}
 
 // In returns a slice of strings with all the files in the directory
 // at that path joined to their path (as is usually wanted). Returns an
