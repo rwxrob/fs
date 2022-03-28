@@ -106,9 +106,18 @@ func execute(args ...string) error {
 	return syscall.Exec(path, args, os.Environ())
 }
 
-// Edit opens the file at the given path for editing using VISUAL or
-// EDITOR or vi or vim or nano (in that order). Currently, this only
-// supports UNIX-like operating systems.
+// Edit opens the file at the given path for editing searching for an
+// editor on the system using the following (in order of priority):
+//
+// * VISUAL
+// * EDITOR
+// * code
+// * vim
+// * vi
+// * nano
+//
+// Currently, only architectures that support syscall.Exec are used but
+// all supported Go architectures are planned.
 func Edit(path string) error {
 	ed := os.Getenv("VISUAL")
 	if ed != "" {
@@ -118,11 +127,15 @@ func Edit(path string) error {
 	if ed != "" {
 		return execute(ed, path)
 	}
-	ed, _ = exec.LookPath("vi")
+	ed, _ = exec.LookPath("code")
 	if ed != "" {
 		return execute(ed, path)
 	}
 	ed, _ = exec.LookPath("vim")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed, _ = exec.LookPath("vi")
 	if ed != "" {
 		return execute(ed, path)
 	}
