@@ -115,3 +115,11 @@ func ExampleReplace() {
 	// 16
 
 }
+
+func ExampleExists() {
+	fmt.Println(file.Exists("testdata/exists"))
+	fmt.Println(file.Exists("testdata"))
+	// Output:
+	// true
+	// false
+}

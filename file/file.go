@@ -145,3 +145,7 @@ func Edit(path string) error {
 	}
 	return fmt.Errorf("unable to find editor")
 }
+
+// Exists calls fs.Exists and further confirms that the file is a file
+// and not a directory.
+func Exists(path string) bool { return fs.Exists(path) && !fs.IsDir(path) }
