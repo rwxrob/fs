@@ -50,3 +50,7 @@ func AddSlash(entries []string) []string {
 	}
 	return list
 }
+
+// Exists calls fs.Exists and further confirms that the path is
+// a directory and not a file.
+func Exists(path string) bool { return _fs.Exists(path) && _fs.IsDir(path) }

@@ -1,10 +1,22 @@
 package dir_test
 
-import "github.com/rwxrob/fs/dir"
+import (
+	"fmt"
+
+	"github.com/rwxrob/fs/dir"
+)
 
 func ExampleEntries() {
 	list := dir.Entries("testdata")
-	list.Print()
+	fmt.Println(list)
 	// Output:
-	// ["testdata/file","testdata/other"]
+	// [testdata/file testdata/other]
+}
+
+func ExampleExists() {
+	fmt.Println(dir.Exists("testdata/exists"))
+	fmt.Println(dir.Exists("testdata"))
+	// Output:
+	// false
+	// true
 }
