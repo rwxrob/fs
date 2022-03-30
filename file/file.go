@@ -112,6 +112,7 @@ func execute(args ...string) error {
 // * VISUAL
 // * EDITOR
 // * code
+// * kakoune
 // * vim
 // * vi
 // * nano
@@ -128,6 +129,10 @@ func Edit(path string) error {
 		return execute(ed, path)
 	}
 	ed, _ = exec.LookPath("code")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed, _ = exec.LookPath("kak")
 	if ed != "" {
 		return execute(ed, path)
 	}
