@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"syscall"
 	"time"
 
 	"github.com/rwxrob/fs"
@@ -92,8 +91,6 @@ func Fetch(from, to string) error {
 	return nil
 }
 
-// execute executes the given arguments using a syscall so as to hand over
-// all the associated running process references and resources.
 func execute(args ...string) error {
 	if len(args) == 0 {
 		return fmt.Errorf("missing name of executable")
@@ -102,8 +99,11 @@ func execute(args ...string) error {
 	if err != nil {
 		return err
 	}
-	// exits the program unless there is an error
-	return syscall.Exec(path, args, os.Environ())
+	cmd := exec.Command(path, args[1:]...)
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 // Edit opens the file at the given path for editing searching for an
@@ -116,8 +116,6 @@ func execute(args ...string) error {
 // * vi
 // * nano
 //
-// Currently, only architectures that support syscall.Exec are used but
-// all supported Go architectures are planned.
 func Edit(path string) error {
 	ed := os.Getenv("VISUAL")
 	if ed != "" {
