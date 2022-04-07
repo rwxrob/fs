@@ -2,6 +2,7 @@ package dir_test
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/rwxrob/fs/dir"
 )
@@ -19,4 +20,12 @@ func ExampleExists() {
 	// Output:
 	// false
 	// true
+}
+
+func ExampleName() {
+	os.Chdir(`testdata`)
+	fmt.Println(dir.Name())
+	os.Chdir(`..`)
+	// Output:
+	// testdata
 }

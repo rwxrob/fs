@@ -54,3 +54,9 @@ func AddSlash(entries []string) []string {
 // Exists calls fs.Exists and further confirms that the path is
 // a directory and not a file.
 func Exists(path string) bool { return _fs.Exists(path) && _fs.IsDir(path) }
+
+// Name returns the current working directory name or an empty string.
+func Name() string {
+	wd, _ := os.Getwd()
+	return filepath.Base(wd)
+}
