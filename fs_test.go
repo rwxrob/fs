@@ -2,11 +2,11 @@ package fs_test
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/rwxrob/fs"
 )
 
+/*
 func ExampleIsDir() {
 	fmt.Println(fs.IsDir("testdata"))
 	fmt.Println(fs.IsDir("testdata/fail"))
@@ -33,6 +33,7 @@ func ExampleDupPerms() {
 	// d---------
 	// drw-------
 }
+*/
 
 func ExampleExists() {
 	fmt.Println(fs.Exists("testdata/file")) // use NotExists instead of !
