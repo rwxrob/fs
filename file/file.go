@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 
 	"github.com/rwxrob/fs"
@@ -147,3 +148,20 @@ func Edit(path string) error {
 // Exists calls fs.Exists and further confirms that the file is a file
 // and not a directory.
 func Exists(path string) bool { return fs.Exists(path) && !fs.IsDir(path) }
+
+// HereOrAbove returns the full path to the file if the file is found in
+// the current working directory, or if not exists in any parent
+// directory recursively.
+func HereOrAbove(name string) (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	for ; len(dir) > 0 && dir != "/"; dir = filepath.Dir(dir) {
+		path := filepath.Join(dir, name)
+		if Exists(path) {
+			return path, nil
+		}
+	}
+	return "", nil
+}

@@ -6,6 +6,8 @@ import (
 	"net/http"
 	ht "net/http/httptest"
 	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/rwxrob/fs"
 	"github.com/rwxrob/fs/file"
@@ -122,4 +124,38 @@ func ExampleExists() {
 	// Output:
 	// true
 	// false
+}
+
+func ExampleHereOrAbove_here() {
+	dir, _ := os.Getwd()
+	defer func() { os.Chdir(dir) }()
+	os.Chdir("testdata/adir")
+
+	path, err := file.HereOrAbove("afile")
+	if err != nil {
+		fmt.Println(err)
+	}
+	d := strings.Split(path, string(filepath.Separator))
+	fmt.Println(d[len(d)-2:])
+
+	// Output:
+	// [adir afile]
+
+}
+
+func ExampleHereOrAbove_above() {
+	dir, _ := os.Getwd()
+	defer func() { os.Chdir(dir) }()
+	os.Chdir("testdata/adir")
+
+	path, err := file.HereOrAbove("anotherfile")
+	if err != nil {
+		fmt.Println(err)
+	}
+	d := strings.Split(path, string(filepath.Separator))
+	fmt.Println(d[len(d)-2:])
+
+	// Output:
+	// [testdata anotherfile]
+
 }
