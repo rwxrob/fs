@@ -4,11 +4,3 @@
 [![License](https://img.shields.io/badge/license-Apache2-brightgreen.svg)](LICENSE)
 [![Go Report
 Card](https://goreportcard.com/badge/github.com/rwxrob/fs)](https://goreportcard.com/report/github.com/rwxrob/fs)
-
-* file.Touch
-* file.Replace
-* file.Fetch
-* file.Edit
-* fs.Exists
-* fs.NotExists
-* dir.Entries 

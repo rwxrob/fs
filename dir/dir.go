@@ -60,3 +60,20 @@ func Name() string {
 	wd, _ := os.Getwd()
 	return filepath.Base(wd)
 }
+
+// HereOrAbove returns the full path to the dir if the dir is found in
+// the current working directory, or if not exists in any parent
+// directory recursively.
+func HereOrAbove(name string) (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	for ; len(dir) > 0 && dir != "/"; dir = filepath.Dir(dir) {
+		path := filepath.Join(dir, name)
+		if Exists(path) {
+			return path, nil
+		}
+	}
+	return "", nil
+}

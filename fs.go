@@ -3,6 +3,7 @@ package fs
 import (
 	"log"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -61,4 +62,21 @@ func Exists(path string) bool {
 func NotExists(path string) bool {
 	_, err := os.Stat(path)
 	return os.IsNotExist(err)
+}
+
+// HereOrAbove returns the full path to the file or directory if it is
+// found in the current working directory, or if not exists in any
+// parent directory recursively.
+func HereOrAbove(name string) (string, error) {
+	dir, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+	for ; len(dir) > 0 && dir != "/"; dir = filepath.Dir(dir) {
+		path := filepath.Join(dir, name)
+		if Exists(path) {
+			return path, nil
+		}
+	}
+	return "", nil
 }

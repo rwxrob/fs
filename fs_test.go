@@ -2,6 +2,9 @@ package fs_test
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/rwxrob/fs"
 )
@@ -53,4 +56,38 @@ func ExampleModTime() {
 	// Output:
 	// true
 	// 0001-01-01 00:00:00 +0000 UTC
+}
+
+func ExampleHereOrAbove_here() {
+	dir, _ := os.Getwd()
+	defer func() { os.Chdir(dir) }()
+	os.Chdir("testdata/adir")
+
+	path, err := fs.HereOrAbove("afile")
+	if err != nil {
+		fmt.Println(err)
+	}
+	d := strings.Split(path, string(filepath.Separator))
+	fmt.Println(d[len(d)-2:])
+
+	// Output:
+	// [adir afile]
+
+}
+
+func ExampleHereOrAbove_above() {
+	dir, _ := os.Getwd()
+	defer func() { os.Chdir(dir) }()
+	os.Chdir("testdata/adir")
+
+	path, err := fs.HereOrAbove("anotherfile")
+	if err != nil {
+		fmt.Println(err)
+	}
+	d := strings.Split(path, string(filepath.Separator))
+	fmt.Println(d[len(d)-2:])
+
+	// Output:
+	// [testdata anotherfile]
+
 }
