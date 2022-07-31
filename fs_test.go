@@ -1,6 +1,7 @@
 package fs_test
 
 import (
+	"embed"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -8,6 +9,59 @@ import (
 
 	"github.com/rwxrob/fs"
 )
+
+//go:embed testdata/testfs
+var testfs embed.FS
+
+func ExampleExtractEmbed_confirm_Default_Read() {
+
+	// go:embed testdata/testfs
+	// var testfs embed.FS
+
+	foo, err := testfs.Open("testdata/testfs/foo")
+	if err != nil {
+		fmt.Println(err)
+	}
+	info, err := foo.Stat()
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(info.Mode())
+
+	// Output:
+	// -r--r--r--
+}
+
+func ExampleExtractEmbed() {
+
+	// go:embed testdata/testfs
+	// var testfs embed.FS
+	defer os.Remove("testdata/testfsout")
+
+	if err := fs.ExtractEmbed(testfs, "testdata/testfs", "testdata/testfsout"); err != nil {
+		fmt.Println(err)
+	}
+
+	stuff := []string{
+		`foo`,
+		`_notignored`,
+		`.secret`,
+		`dir`,
+		`dir/README.md`,
+	}
+
+	for _, i := range stuff {
+		f, err := os.Stat(filepath.Join("testdata/testfsout", i))
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Printf("%v %v", f.Name(), f.Mode())
+	}
+
+	// Output:
+	// -r--r--r--
+}
 
 /*
 func ExampleIsDir() {

@@ -1,6 +1,8 @@
 package fs
 
 import (
+	"embed"
+	_fs "io/fs"
 	"log"
 	"os"
 	"path/filepath"
@@ -79,4 +81,37 @@ func HereOrAbove(name string) (string, error) {
 		}
 	}
 	return "", nil
+}
+
+// IsDirFS simply a shortcut for fs.Stat().IsDir(). Only returns true if
+// the path is a directory. If not a directory (or an error prevented
+// confirming it is a directory) then returns false.
+func IsDirFS(fsys _fs.FS, path string) bool {
+	info, err := _fs.Stat(fsys, path)
+	if err != nil {
+		return false
+	}
+	return info.IsDir()
+}
+
+var (
+	ExtraFilePerms = 0600
+	ExtraDirPerms  = 0700
+)
+
+// ExtractEmbed walks the embedded file system and duplicates its
+// structure into the target directory beginning with root. Since
+// embed.FS drops all permissions information from the original files
+// all files and directories are written as read/write (0600) for the
+// current effective user (0600 for file, 0700 for directories). This
+// default can be changed by setting the package variables
+// ExtractFilePerms and ExtractDirPerms. Note that each embedded file is
+// full buffered into memory before writing.
+func ExtractEmbed(it embed.FS, root, target string) error {
+	return _fs.WalkDir(it, root,
+		func(path string, i _fs.DirEntry, err error) error {
+			// TODO finish this up
+			log.Printf("%v %v", path, i.Name())
+			return nil
+		})
 }
