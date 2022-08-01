@@ -10,12 +10,12 @@ import (
 	"github.com/rwxrob/fs"
 )
 
-//go:embed testdata/testfs
+//go:embed all:testdata/testfs
 var testfs embed.FS
 
 func ExampleExtractEmbed_confirm_Default_Read() {
 
-	// go:embed testdata/testfs
+	// go:embed all:testdata/testfs
 	// var testfs embed.FS
 
 	foo, err := testfs.Open("testdata/testfs/foo")
@@ -34,11 +34,12 @@ func ExampleExtractEmbed_confirm_Default_Read() {
 
 func ExampleExtractEmbed() {
 
-	// go:embed testdata/testfs
+	// go:embed all:testdata/testfs
 	// var testfs embed.FS
-	defer os.Remove("testdata/testfsout")
+	defer os.RemoveAll("testdata/testfsout")
 
-	if err := fs.ExtractEmbed(testfs, "testdata/testfs", "testdata/testfsout"); err != nil {
+	if err := fs.ExtractEmbed(testfs,
+		"testdata/testfs", "testdata/testfsout"); err != nil {
 		fmt.Println(err)
 	}
 
@@ -56,11 +57,16 @@ func ExampleExtractEmbed() {
 			fmt.Println(err)
 			continue
 		}
-		fmt.Printf("%v %v", f.Name(), f.Mode())
+		fmt.Printf("%v %v\n", i, f.Mode())
 	}
 
 	// Output:
-	// -r--r--r--
+	// foo -rw-------
+	// _notignored -rw-------
+	// .secret -rw-------
+	// dir drwx------
+	// dir/README.md -rw-------
+
 }
 
 /*

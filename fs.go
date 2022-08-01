@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -95,8 +96,8 @@ func IsDirFS(fsys _fs.FS, path string) bool {
 }
 
 var (
-	ExtraFilePerms = 0600
-	ExtraDirPerms  = 0700
+	ExtractFilePerms = _fs.FileMode(0600)
+	ExtractDirPerms  = _fs.FileMode(0700)
 )
 
 // ExtractEmbed walks the embedded file system and duplicates its
@@ -109,9 +110,21 @@ var (
 // full buffered into memory before writing.
 func ExtractEmbed(it embed.FS, root, target string) error {
 	return _fs.WalkDir(it, root,
+
 		func(path string, i _fs.DirEntry, err error) error {
-			// TODO finish this up
-			log.Printf("%v %v", path, i.Name())
-			return nil
+
+			to := filepath.Join(target, strings.TrimPrefix(path, root))
+
+			if i.IsDir() {
+				return os.MkdirAll(to, ExtractDirPerms)
+			}
+
+			buf, err := _fs.ReadFile(it, path)
+			if err != nil {
+				return err
+			}
+
+			return os.WriteFile(to, buf, ExtractFilePerms)
 		})
+
 }
