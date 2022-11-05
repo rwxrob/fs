@@ -5,10 +5,25 @@ import (
 	_fs "io/fs"
 	"log"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 	"time"
 )
+
+// Tilde2Home expands a Tilde (~) prefix into a proper os.UserHomeDir path. If
+// it cannot find os.UserHomeDir simple returns unchanged path. Will not
+// expand for specific users (~username).
+func Tilde2Home(dir string) string {
+	if !strings.HasPrefix(dir, `~`) {
+		return dir
+	}
+	home, _ := os.UserHomeDir()
+	if home != "" {
+		return path.Join(home, dir[1:])
+	}
+	return dir
+}
 
 // IsDir returns true if the indicated path is a directory. Returns
 // false and logs if unable to determine.

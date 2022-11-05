@@ -151,3 +151,23 @@ func ExampleHereOrAbove_above() {
 	// [testdata anotherfile]
 
 }
+
+/*
+
+// remaining only work for specific users and systems
+
+func ExampleTilde2Home_good() {
+	path := `~/some/path`
+	fmt.Println(fs.Tilde2Home(path))
+	// Output:
+	// /home/rwxrob/some/path
+}
+
+func ExampleTilde2Home_no_Tilde() {
+	path := `/some/path`
+	fmt.Println(fs.Tilde2Home(path))
+	// Output:
+	// /some/path
+}
+
+*/
