@@ -2,6 +2,7 @@ package fs
 
 import (
 	"embed"
+	"io/fs"
 	_fs "io/fs"
 	"log"
 	"os"
@@ -142,4 +143,21 @@ func ExtractEmbed(it embed.FS, root, target string) error {
 			return os.WriteFile(to, buf, ExtractFilePerms)
 		})
 
+}
+
+// Paths returns a list of full paths to each of the directories or
+// files from the root but with the path to the root stripped resulting
+// in relative paths.
+func RelPaths(it fs.FS, root string) []string {
+	var paths []string
+	_fs.WalkDir(it, root,
+		func(path string, i _fs.DirEntry, err error) error {
+			to := strings.TrimPrefix(path, root)
+			if to == "" {
+				return nil
+			}
+			paths = append(paths, to[1:])
+			return nil
+		})
+	return paths
 }
