@@ -161,3 +161,38 @@ func RelPaths(it fs.FS, root string) []string {
 		})
 	return paths
 }
+
+// LatestChange walks the directory rooted at root looking at each file or
+// directory within it recursively (including itself) and returns the
+// time of the most recent change along with its full path. LastChange
+// returns nil tile and empty string if root does not exist.
+func LatestChange(root string) (string, fs.FileInfo) {
+	latest := struct {
+		Info fs.FileInfo
+		Path string
+	}{}
+	err := filepath.WalkDir(root, func(p string, f fs.DirEntry, _ error) error {
+		if latest.Path == "" {
+			i, err := f.Info()
+			if err != nil {
+				return err
+			}
+			latest.Info = i
+			latest.Path = p
+			return nil
+		}
+		i, err := f.Info()
+		if err != nil {
+			return nil
+		}
+		if i.ModTime().After(latest.Info.ModTime()) {
+			latest.Info = i
+			latest.Path = p
+		}
+		return nil
+	})
+	if err != nil {
+		return "", nil
+	}
+	return latest.Path, latest.Info
+}

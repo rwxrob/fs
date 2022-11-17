@@ -66,12 +66,3 @@ func ExampleHereOrAbove_above() {
 	// [testdata adir]
 
 }
-
-/*
-func ExampleLatestChange() {
-	path, _ := dir.LatestChange("testdata")
-	fmt.Println(path)
-	// Output:
-	// whichever
-}
-*/

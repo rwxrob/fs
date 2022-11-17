@@ -153,6 +153,15 @@ func ExampleHereOrAbove_above() {
 }
 
 /*
+func ExampleLatestChange() {
+	path, _ := dir.LatestChange("testdata")
+	fmt.Println(path)
+	// Output:
+	// whichever
+}
+*/
+
+/*
 
 // remaining only work for specific users and systems
 
