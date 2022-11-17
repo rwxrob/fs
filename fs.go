@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -195,4 +196,64 @@ func LatestChange(root string) (string, fs.FileInfo) {
 		return "", nil
 	}
 	return latest.Path, latest.Info
+}
+
+// PathEntry contains the fully qualified path to a DirEntry and the
+// returned FileInfo for that specific path. PathEntry saves the work of
+// fetching this information a second time when functions in this
+// package have already retrieved it.
+type PathEntry struct {
+	Path string
+	Info fs.FileInfo
+}
+
+// IntDirs returns all the directory entries within the target directory
+// that have integer names. The lowest integer and highest integer
+// values are also returned. Only positive integers are checked. This is
+// useful when using directory names as database-friendly unique primary
+// keys for other file system content.
+//
+// IntDirs returns an empty slice and -1 values if no matches are
+// found.
+//
+// Errors looking up the FileInfo cause Into to be nil.
+func IntDirs(target string) (paths []PathEntry, low, high int) {
+	low, high = -1, -1
+	entries, err := os.ReadDir(target)
+	if err != nil {
+		return
+	}
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		var val int
+		name := entry.Name()
+		if v, err := strconv.Atoi(name); err != nil || v < 0 {
+			continue
+		} else {
+			val = v
+		}
+		if low < 0 {
+			low = val
+		}
+		if high < 0 {
+			high = val
+		}
+		if val > high {
+			high = val
+		}
+		if val < low {
+			low = val
+		}
+		var pe PathEntry
+		if abs, err := filepath.Abs(filepath.Join(target, name)); err == nil {
+			pe.Path = abs
+		}
+		if i, err := entry.Info(); err != nil {
+			pe.Info = i
+		}
+		paths = append(paths, pe)
+	}
+	return
 }

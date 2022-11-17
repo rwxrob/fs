@@ -152,6 +152,24 @@ func ExampleHereOrAbove_above() {
 
 }
 
+func ExampleIntDirs() {
+
+	dirs, low, high := fs.IntDirs("testdata/ints")
+
+	fmt.Println(low)
+	fmt.Println(high)
+
+	for _, d := range dirs {
+		fmt.Printf("%v ", filepath.Base(d.Path))
+	}
+
+	// Output:
+	// 2
+	// 10
+	// 10 2 3 4 5 6 7 8 9
+
+}
+
 /*
 func ExampleLatestChange() {
 	path, _ := dir.LatestChange("testdata")
