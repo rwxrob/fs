@@ -171,6 +171,15 @@ func ExampleIntDirs() {
 }
 
 /*
+func ExampleIsosecModTime() {
+	dirs, _, _ := fs.IntDirs("testdata/ints")
+	fmt.Println(fs.IsosecModTime(dirs[1].Info))
+	// Output:
+	// 20221117200334
+}
+*/
+
+/*
 func ExampleLatestChange() {
 	path, _ := dir.LatestChange("testdata")
 	fmt.Println(path)
