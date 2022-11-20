@@ -159,3 +159,51 @@ func ExampleHereOrAbove_above() {
 	// [testdata anotherfile]
 
 }
+
+func ExampleHead() {
+
+	lines, err := file.Head(`testdata/headtail`, 2)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(lines)
+
+	// Output:
+	// [one two]
+}
+
+func ExampleHead_over() {
+
+	lines, err := file.Head(`testdata/headtail`, 20)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(lines)
+
+	// Output:
+	// [one two three four five]
+}
+
+func ExampleTail() {
+
+	lines, err := file.Tail(`testdata/headtail`, 2)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(lines)
+
+	// Output:
+	// [four five]
+}
+
+func ExampleTail_over() {
+
+	lines, err := file.Tail(`testdata/headtail`, 20)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(lines)
+
+	// Output:
+	// [one two three four five]
+}

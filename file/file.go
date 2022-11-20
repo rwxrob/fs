@@ -1,6 +1,7 @@
 package file
 
 import (
+	"bufio"
 	"fmt"
 	"io"
 	_fs "io/fs"
@@ -164,4 +165,39 @@ func HereOrAbove(name string) (string, error) {
 		}
 	}
 	return "", nil
+}
+
+// Head is like the UNIX head command returning only that number of
+// lines from the top of a file.
+func Head(path string, n int) ([]string, error) {
+	lines := make([]string, 0, n)
+	f, err := os.Open(path)
+	defer f.Close()
+	if err != nil {
+		return nil, err
+	}
+	s := bufio.NewScanner(f)
+	for c := 0; s.Scan() && c < n; c++ {
+		lines = append(lines, s.Text())
+	}
+	return lines, nil
+}
+
+// Tail is like the UNIX tail command returning only that number of
+// lines from the bottom of a file.
+func Tail(path string, n int) ([]string, error) {
+	lines := make([]string, 0, n)
+	f, err := os.Open(path)
+	defer f.Close()
+	if err != nil {
+		return nil, err
+	}
+	s := bufio.NewScanner(f)
+	for s.Scan() {
+		lines = append(lines, s.Text())
+	}
+	if n > len(lines) {
+		n = len(lines)
+	}
+	return lines[len(lines)-n:], nil
 }
