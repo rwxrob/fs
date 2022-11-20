@@ -9,8 +9,11 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
+	"strings"
 	"time"
 
+	"github.com/rogpeppe/go-internal/lockedfile"
 	"github.com/rwxrob/fs"
 )
 
@@ -200,4 +203,41 @@ func Tail(path string, n int) ([]string, error) {
 		n = len(lines)
 	}
 	return lines[len(lines)-n:], nil
+}
+
+// ReplaceAllString loads the file at path into buffer, compiles the
+// regx, and replaces all matches with repl same as function of same
+// name overwriting the target file at path. Returns and error if unable
+// to compile the regular expression or read or overwrite the file.
+//
+// Normally, it is better to pre-compile regular expressions. This
+// function is designed for applications where the regular expression
+// and replacement string are passed by the user at runtime.
+func ReplaceAllString(path, regx, repl string) error {
+	buf, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	exp, err := regexp.Compile(regx)
+	if err != nil {
+		return err
+	}
+	return Overwrite(path, exp.ReplaceAllString(string(buf), repl))
+}
+
+// Overwrite replaces the content of the target file at path with the
+// string passed using the same file-level locking used by Go. File
+// permissions are preserved.
+func Overwrite(path, buf string) error {
+	f, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	info, err := f.Stat()
+	if err != nil {
+		return err
+	}
+	return lockedfile.Write(
+		path, strings.NewReader(buf), info.Mode(),
+	)
 }

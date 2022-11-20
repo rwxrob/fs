@@ -11,8 +11,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/rwxrob/to"
 )
 
 // Tilde2Home expands a Tilde (~) prefix into a proper os.UserHomeDir path. If
@@ -258,10 +256,4 @@ func IntDirs(target string) (paths []PathEntry, low, high int) {
 		paths = append(paths, pe)
 	}
 	return
-}
-
-// IsosecModTime returns an isosec string based on the ModTime of the
-// FileInfo object passed. Panics if not argument passed.
-func IsosecModTime(i fs.FileInfo) string {
-	return to.Isosec(i.ModTime())
 }

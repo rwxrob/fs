@@ -1,3 +1,5 @@
+github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=
+github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rwxrob/fn v0.3.3 h1:ymRQGWDhrrvoHKXLJ4WZlgI2qrC7gMOotowQMGvwmVQ=
 github.com/rwxrob/fn v0.3.3/go.mod h1:omPqOqEB+dDna09z5pi5YFxq4IZqDvv3wFPUCES5LvY=
 github.com/rwxrob/json v0.7.0/go.mod h1:BYaPIp+4cI64f7jdqkaVAjqU/HSIiwkqPNDr9tTUvRQ=
@@ -7,3 +9,5 @@ github.com/rwxrob/structs v0.6.0 h1:t8JVd/Pee1OGaXgT6QYmGed470C9vOw6scdH8Cr5LPg=
 github.com/rwxrob/structs v0.6.0/go.mod h1:txMfzPfEiIDNM5bwhzUqxr/1QQ3ekOuj3KLT8Nt1fA0=
 github.com/rwxrob/to v0.8.1 h1:xd/TrfqclZ9/+ipy37cUL0m0qyTD8qb6Lo8eMuo6DlY=
 github.com/rwxrob/to v0.8.1/go.mod h1:5z3Y1tyXRmPfa+be5hvnxYuLQ0NSBQsE6mIBVTqlYTA=
+github.com/rwxrob/to v0.10.0 h1:pv8Hc6dE9VjAC8tSB0WmioaoW/6RxPKlehDGpw7Ms8M=
+github.com/rwxrob/to v0.10.0/go.mod h1:5z3Y1tyXRmPfa+be5hvnxYuLQ0NSBQsE6mIBVTqlYTA=

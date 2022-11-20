@@ -3,8 +3,9 @@ module github.com/rwxrob/fs
 go 1.18
 
 require (
+	github.com/rogpeppe/go-internal v1.9.0
 	github.com/rwxrob/json v0.7.0
-	github.com/rwxrob/to v0.8.1
+	github.com/rwxrob/to v0.10.0
 )
 
 require (
