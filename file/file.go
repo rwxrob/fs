@@ -225,6 +225,23 @@ func ReplaceAllString(path, regx, repl string) error {
 	return Overwrite(path, exp.ReplaceAllString(string(buf), repl))
 }
 
+// FindString reads the file at path into a string, dynamically compiles
+// the regx regular expression, and returns FindString on it returning an
+// error if file does not exist, or if regular expression could not
+// compile. Note that it is not an error to not find the string, which
+// causes an empty string to be returned. See regexp.FindString.
+func FindString(path, regx string) (string, error) {
+	buf, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	exp, err := regexp.Compile(regx)
+	if err != nil {
+		return "", err
+	}
+	return exp.FindString(string(buf)), nil
+}
+
 // Overwrite replaces the content of the target file at path with the
 // string passed using the same file-level locking used by Go. File
 // permissions are preserved.

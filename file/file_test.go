@@ -218,3 +218,13 @@ func ExampleRepaceAllString() {
 	// ignored
 }
 */
+
+func ExampleFindString() {
+	str, err := file.FindString(`testdata/headtail`, `thre+`)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(str)
+	// Output:
+	// three
+}
