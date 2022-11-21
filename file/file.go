@@ -2,6 +2,7 @@ package file
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	_fs "io/fs"
@@ -244,17 +245,23 @@ func FindString(path, regx string) (string, error) {
 
 // Overwrite replaces the content of the target file at path with the
 // string passed using the same file-level locking used by Go. File
-// permissions are preserved.
+// permissions are preserved if file exists.
 func Overwrite(path, buf string) error {
 	f, err := os.Open(path)
+	var mode _fs.FileMode
 	if err != nil {
-		return err
+		if errors.Is(err, os.ErrNotExist) {
+			mode = _fs.FileMode(DefaultPerms)
+		} else {
+			return err
+		}
 	}
-	info, err := f.Stat()
-	if err != nil {
-		return err
+	if !(uint32(mode) > 0) {
+		info, err := f.Stat()
+		if err != nil {
+			return err
+		}
+		mode = info.Mode()
 	}
-	return lockedfile.Write(
-		path, strings.NewReader(buf), info.Mode(),
-	)
+	return lockedfile.Write(path, strings.NewReader(buf), mode)
 }
