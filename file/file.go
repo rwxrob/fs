@@ -251,7 +251,13 @@ func Overwrite(path, buf string) error {
 	var mode _fs.FileMode
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
-			mode = _fs.FileMode(DefaultPerms)
+			if err := Touch(path); err != nil {
+				return err
+			}
+			f, err = os.Open(path)
+			if err := Touch(path); err != nil {
+				return err
+			}
 		} else {
 			return err
 		}
@@ -264,4 +270,17 @@ func Overwrite(path, buf string) error {
 		mode = info.Mode()
 	}
 	return lockedfile.Write(path, strings.NewReader(buf), mode)
+}
+
+// Cat just prints the contents of target file to stdout. If the file
+// cannot be found or opened returns error. For performance, the entire
+// file is loaded into memory before being written to stdout. Do not use
+// this on anything where the size of the file is unknown and untrusted.
+func Cat(path string) error {
+	f, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	os.Stdout.Write(f)
+	return nil
 }

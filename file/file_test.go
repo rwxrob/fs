@@ -228,3 +228,14 @@ func ExampleFindString() {
 	// Output:
 	// three
 }
+
+func ExampleOverwrite() {
+	err := file.Overwrite(`testdata/overwritten`, `hello`)
+	defer os.Remove(`testdata/overwritten`)
+	if err != nil {
+		fmt.Println(err)
+	}
+	file.Cat(`testdata/overwritten`)
+	// Output:
+	// hello
+}
