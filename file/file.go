@@ -20,13 +20,20 @@ import (
 
 // DefaultPerms for new file creation.
 var DefaultPerms = 0600
+var DefaultDirPerms = 0700
 
 // Touch creates a new file at path or updates the time stamp of
 // existing. If a new file is needed creates it with 0600 permissions
-// (instead of 0666 as default os.Create does). The directory must
-// already exist.
+// (instead of 0666 as default os.Create does). If the directory does
+// not exist it is also created using DefaultDirPerms.
 func Touch(path string) error {
 	if fs.NotExists(path) {
+		if err := os.MkdirAll(
+			filepath.Dir(path),
+			_fs.FileMode(DefaultDirPerms),
+		); err != nil {
+			return err
+		}
 		file, err := os.Create(path)
 		if err != nil {
 			return err
