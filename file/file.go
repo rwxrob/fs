@@ -291,3 +291,13 @@ func Cat(path string) error {
 	os.Stdout.Write(f)
 	return nil
 }
+
+// IsEmpty checks for files of zero length in an OS-agnostic way. If the
+// file does not exist returns false.
+func IsEmpty(path string) bool {
+	info, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	return info.Size() == 0
+}

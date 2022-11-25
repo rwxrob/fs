@@ -239,3 +239,14 @@ func ExampleOverwrite() {
 	// Output:
 	// hello
 }
+
+func ExampleIsEmpty() {
+	fmt.Println(file.IsEmpty(`testdata/overwritten`))
+	fmt.Println(file.IsEmpty(`testdata/ovewritten`))
+	file.Touch(`testdata/emptyfile`)
+	fmt.Println(file.IsEmpty(`testdata/emptyfile`))
+	// Output:
+	// false
+	// false
+	// true
+}
