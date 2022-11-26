@@ -2,6 +2,7 @@ package fs
 
 import (
 	"embed"
+	"fmt"
 	"io/fs"
 	_fs "io/fs"
 	"log"
@@ -84,9 +85,18 @@ func NotExists(path string) bool {
 	return os.IsNotExist(err)
 }
 
+type ErrNotExist struct {
+	N string
+}
+
+func (e ErrNotExist) Error() string {
+	return fmt.Sprintf("file or directory does not exist: %v", e.N)
+}
+
 // HereOrAbove returns the full path to the file or directory if it is
 // found in the current working directory, or if not exists in any
-// parent directory recursively.
+// parent directory recursively. Returns ErrNotExist error with the name
+// if not found.
 func HereOrAbove(name string) (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -98,7 +108,7 @@ func HereOrAbove(name string) (string, error) {
 			return path, nil
 		}
 	}
-	return "", nil
+	return "", ErrNotExist{name}
 }
 
 // IsDirFS simply a shortcut for fs.Stat().IsDir(). Only returns true if
