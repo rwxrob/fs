@@ -207,3 +207,24 @@ func ExampleTilde2Home_no_Tilde() {
 }
 
 */
+
+/*
+func ExamplePreserve() {
+	file.Touch(`testdata/preserve`)
+	if err := fs.Preserve(`testdata/preserve`); err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+	// ignored
+}
+*/
+
+/*
+func ExampleRestore() {
+	if err := fs.Restore(`testdata/preserve`); err != nil {
+		fmt.Println(err)
+	}
+	// Output:
+	// ignored
+}
+*/

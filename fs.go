@@ -12,6 +12,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/rwxrob/uniq"
 )
 
 // Tilde2Home expands a Tilde (~) prefix into a proper os.UserHomeDir path. If
@@ -91,6 +93,14 @@ type ErrNotExist struct {
 
 func (e ErrNotExist) Error() string {
 	return fmt.Sprintf("file or directory does not exist: %v", e.N)
+}
+
+type ErrExist struct {
+	N string
+}
+
+func (e ErrExist) Error() string {
+	return fmt.Sprintf("file or directory already exists: %v", e.N)
 }
 
 // HereOrAbove returns the full path to the file or directory if it is
@@ -266,4 +276,36 @@ func IntDirs(target string) (paths []PathEntry, low, high int) {
 		paths = append(paths, pe)
 	}
 	return
+}
+
+// Preserve moves the target to a new name with an "~" isosec suffix usually
+// in anticipation of eventual deletion or restoration for
+// transactionally safe dealings with directories and files. Returns
+// ErrNotExist if target does not exist.
+func Preserve(target string) error {
+	if NotExists(target) {
+		return ErrNotExist{target}
+	}
+	return os.Rename(target, target+"~"+uniq.Isosec())
+}
+
+// Restore moves the most recent target found to the original target
+// name. Files ending with tilde (~) and are searched for in the current
+// directory. The one which is lexically last is considered the most
+// recent. If no match is found ErrNotExist is returned instead. If
+// there is already a file at the location of target ErrExist is
+// returned.
+func Restore(target string) error {
+	files, err := filepath.Glob(
+		target + `~*`)
+	if err != nil {
+		return err
+	}
+	if len(files) == 0 {
+		return ErrNotExist{target + "~*"}
+	}
+	if Exists(target) {
+		return ErrExist{target}
+	}
+	return os.Rename(files[len(files)-1], target)
 }
