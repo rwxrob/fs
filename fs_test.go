@@ -211,9 +211,11 @@ func ExampleTilde2Home_no_Tilde() {
 /*
 func ExamplePreserve() {
 	file.Touch(`testdata/preserve`)
-	if err := fs.Preserve(`testdata/preserve`); err != nil {
+	name, err := fs.Preserve(`testdata/preserve`)
+	if err != nil {
 		fmt.Println(err)
 	}
+	fmt.Println(name)
 	// Output:
 	// ignored
 }

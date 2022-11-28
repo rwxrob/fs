@@ -278,15 +278,20 @@ func IntDirs(target string) (paths []PathEntry, low, high int) {
 	return
 }
 
-// Preserve moves the target to a new name with an "~" isosec suffix usually
-// in anticipation of eventual deletion or restoration for
-// transactionally safe dealings with directories and files. Returns
-// ErrNotExist if target does not exist.
-func Preserve(target string) error {
+// Preserve moves the target to a new name with an "~" isosec suffix
+// usually in anticipation of eventual deletion or restoration for
+// transactionally safe dealings with directories and files. Returns the
+// name of the new file or directory. Returns ErrNotExist if target does
+// not exist.
+func Preserve(target string) (string, error) {
 	if NotExists(target) {
-		return ErrNotExist{target}
+		return "", ErrNotExist{target}
 	}
-	return os.Rename(target, target+"~"+uniq.Isosec())
+	nname := target + `~` + uniq.Isosec()
+	if err := os.Rename(target, nname); err != nil {
+		return "", err
+	}
+	return nname, nil
 }
 
 // Restore moves the most recent target found to the original target
