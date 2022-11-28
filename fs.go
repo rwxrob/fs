@@ -281,11 +281,13 @@ func IntDirs(target string) (paths []PathEntry, low, high int) {
 // Preserve moves the target to a new name with an "~" isosec suffix
 // usually in anticipation of eventual deletion or restoration for
 // transactionally safe dealings with directories and files. Returns the
-// name of the new file or directory. Returns ErrNotExist if target does
-// not exist.
+// name of the new file or directory. Does *not* return an error if the
+// target doesn't exist (since there is nothing to preserve) and returns
+// an empty string. Pair this with defer RevertIfMissing to provide
+// transactional backups of files and directories.
 func Preserve(target string) (string, error) {
 	if NotExists(target) {
-		return "", ErrNotExist{target}
+		return "", nil
 	}
 	nname := target + `~` + uniq.Isosec()
 	if err := os.Rename(target, nname); err != nil {
@@ -297,10 +299,14 @@ func Preserve(target string) (string, error) {
 // RevertIfMissing is designed to be called from defer after calling
 // a Preserve and storing the backup path to a variable. If the target
 // is missing, backup is renamed back to the target. If the target is
-// *not* missing, backup is removed. Be very careful to ensure the paths
-// passed are, in fact, what is wanted for deletion. Do not invert the
-// arguments!
+// *not* missing, backup is removed. If the backup is an empty string no
+// backup restoration is assumed and a nil error is returned with no
+// action. This allows the output of Preserve to be passed directly to
+// RevertIfMissing without complicating the defer.
 func RevertIfMissing(target, backup string) error {
+	if target == "" {
+		return nil
+	}
 	if NotExists(target) {
 		if err := os.Rename(backup, target); err != nil {
 			return err
