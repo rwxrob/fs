@@ -220,13 +220,3 @@ func ExamplePreserve() {
 	// ignored
 }
 */
-
-/*
-func ExampleRestore() {
-	if err := fs.Restore(`testdata/preserve`); err != nil {
-		fmt.Println(err)
-	}
-	// Output:
-	// ignored
-}
-*/

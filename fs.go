@@ -293,24 +293,3 @@ func Preserve(target string) (string, error) {
 	}
 	return nname, nil
 }
-
-// Restore moves the most recent target found to the original target
-// name. Files ending with tilde (~) and are searched for in the current
-// directory. The one which is lexically last is considered the most
-// recent. If no match is found ErrNotExist is returned instead. If
-// there is already a file at the location of target ErrExist is
-// returned.
-func Restore(target string) error {
-	files, err := filepath.Glob(
-		target + `~*`)
-	if err != nil {
-		return err
-	}
-	if len(files) == 0 {
-		return ErrNotExist{target + "~*"}
-	}
-	if Exists(target) {
-		return ErrExist{target}
-	}
-	return os.Rename(files[len(files)-1], target)
-}
