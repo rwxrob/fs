@@ -220,3 +220,18 @@ func ExamplePreserve() {
 	// ignored
 }
 */
+
+/*
+func ExampleRevertIfMissing() {
+	file.Overwrite(`testdata/preserve`, `original`)
+	name, err := fs.Preserve(`testdata/preserve`)
+	os.Remove(`testdata/preserve`)
+	defer fs.RevertIfMissing(`testdata/preserve`, name)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(name)
+	// Output:
+	// ignored
+}
+*/

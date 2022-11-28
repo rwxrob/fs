@@ -293,3 +293,23 @@ func Preserve(target string) (string, error) {
 	}
 	return nname, nil
 }
+
+// RevertIfMissing is designed to be called from defer after calling
+// a Preserve and storing the backup path to a variable. If the target
+// is missing, backup is renamed back to the target. If the target is
+// *not* missing, backup is removed. Be very careful to ensure the paths
+// passed are, in fact, what is wanted for deletion. Do not invert the
+// arguments!
+func RevertIfMissing(target, backup string) error {
+	if NotExists(target) {
+		if err := os.Rename(backup, target); err != nil {
+			return err
+		}
+	}
+	if Exists(target) {
+		if err := os.RemoveAll(backup); err != nil {
+			return err
+		}
+	}
+	return nil
+}
