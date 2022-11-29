@@ -186,13 +186,20 @@ func RelPaths(it fs.FS, root string) []string {
 // LatestChange walks the directory rooted at root looking at each file or
 // directory within it recursively (including itself) and returns the
 // time of the most recent change along with its full path. LastChange
-// returns nil tile and empty string if root does not exist.
+// returns nil FileInfo and empty string if root is not a directory.
 func LatestChange(root string) (string, fs.FileInfo) {
+
+	if !IsDir(root) {
+		return "", nil
+	}
+
 	latest := struct {
 		Info fs.FileInfo
 		Path string
 	}{}
+
 	err := filepath.WalkDir(root, func(p string, f fs.DirEntry, _ error) error {
+
 		if latest.Path == "" {
 			i, err := f.Info()
 			if err != nil {
@@ -246,7 +253,7 @@ func NameIsInt(path string) bool {
 // IntDirs returns an empty slice and -1 values if no matches are
 // found.
 //
-// Errors looking up the FileInfo cause Into to be nil.
+// Errors looking up the FileInfo cause Info to be nil.
 func IntDirs(target string) (paths []PathEntry, low, high int) {
 	low, high = -1, -1
 	entries, err := os.ReadDir(target)
