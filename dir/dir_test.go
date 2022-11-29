@@ -66,3 +66,11 @@ func ExampleHereOrAbove_above() {
 	// [testdata adir]
 
 }
+
+/*
+func ExampleAbs() {
+	fmt.Println(dir.Abs())
+	// Output:
+	// ignored
+}
+*/

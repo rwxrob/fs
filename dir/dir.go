@@ -61,6 +61,16 @@ func Name() string {
 	return filepath.Base(wd)
 }
 
+// Abs returns the absolute path to the current working directory. If
+// unable to determine, returns empty string.
+func Abs() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		return ""
+	}
+	return dir
+}
+
 // HereOrAbove returns the full path to the dir if the dir is found in
 // the current working directory, or if not exists in any parent
 // directory recursively.
