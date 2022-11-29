@@ -227,6 +227,16 @@ type PathEntry struct {
 	Info fs.FileInfo
 }
 
+// NameIsInt returns true if the filepath.Base name of the passed path
+// is a valid positive integer (including 0).
+func NameIsInt(path string) bool {
+	name := filepath.Base(path)
+	if i, err := strconv.Atoi(name); i < 0 || err != nil {
+		return false
+	}
+	return true
+}
+
 // IntDirs returns all the directory entries within the target directory
 // that have integer names. The lowest integer and highest integer
 // values are also returned. Only positive integers are checked. This is

@@ -235,3 +235,17 @@ func ExampleRevertIfMissing() {
 	// ignored
 }
 */
+
+func ExampleNameIsInt() {
+	fmt.Println(fs.NameIsInt(`/some/1`))
+	fmt.Println(fs.NameIsInt(`100`))
+	fmt.Println(fs.NameIsInt(`-100`))
+	fmt.Println(fs.NameIsInt(`/some/-1`))
+	fmt.Println(fs.NameIsInt(`/some/`))
+	// Output:
+	// true
+	// true
+	// false
+	// false
+	// false
+}
