@@ -294,10 +294,14 @@ func Cat(path string) error {
 
 // IsEmpty checks for files of zero length in an OS-agnostic way. If the
 // file does not exist returns false.
-func IsEmpty(path string) bool {
+func IsEmpty(path string) bool { return Size(path) == 0 }
+
+// Size returns the info.Size() of the file from os.Stat(path). Returns
+// -1 if unable to determine.
+func Size(path string) int64 {
 	info, err := os.Stat(path)
 	if err != nil {
-		return false
+		return -1
 	}
-	return info.Size() == 0
+	return info.Size()
 }

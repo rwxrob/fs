@@ -250,3 +250,9 @@ func ExampleIsEmpty() {
 	// false
 	// true
 }
+
+func ExampleSize() {
+	fmt.Println(file.Size(`testdata/headtail`))
+	// Output:
+	// 24
+}
