@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	_fs "github.com/rwxrob/fs"
+	"github.com/rwxrob/fs/file"
 )
 
 // DefaultPerms are defaults for new directory creation.
@@ -17,9 +18,9 @@ func Create(path string) error {
 	return os.MkdirAll(path, fs.FileMode(DefaultPerms))
 }
 
-// In returns a slice of strings with all the files in the directory
+// Entries returns a slice of strings with all the files in the directory
 // at that path joined to their path (as is usually wanted). Returns an
-// empty slice if empty or path doesn't point to a directory. See List.
+// empty slice if empty or path doesn't point to a directory.
 func Entries(path string) []string {
 	var list []string
 	entries, err := os.ReadDir(path)
@@ -54,6 +55,27 @@ func AddSlash(entries []string) []string {
 // Exists calls fs.Exists and further confirms that the path is
 // a directory and not a file.
 func Exists(path string) bool { return _fs.Exists(path) && _fs.IsDir(path) }
+
+// IsEmpty returns true if the directory at path either contains no
+// files or only files with zero length. Directories are recursively
+// checked. Returns false, however, if the path does not exist.
+func IsEmpty(path string) bool {
+	if _fs.NotExists(path) {
+		return false
+	}
+	for _, entry := range Entries(path) {
+
+		if _fs.IsDir(entry) {
+			return IsEmpty(entry)
+		}
+
+		if !file.IsEmpty(entry) {
+			return false
+		}
+
+	}
+	return true
+}
 
 // Name returns the current working directory name or an empty string.
 func Name() string {

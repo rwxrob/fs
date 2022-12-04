@@ -7,13 +7,14 @@ import (
 	"strings"
 
 	"github.com/rwxrob/fs/dir"
+	"github.com/rwxrob/fs/file"
 )
 
 func ExampleEntries() {
 	list := dir.Entries("testdata")
 	fmt.Println(list)
 	// Output:
-	// [testdata/adir testdata/file testdata/other]
+	// [testdata/adir testdata/emptyfiles testdata/file testdata/hiddenfiles testdata/nofiles testdata/notemptyfiles testdata/other]
 
 }
 
@@ -74,3 +75,37 @@ func ExampleAbs() {
 	// ignored
 }
 */
+
+func ExampleIsEmpty_notexist() {
+	fmt.Println(dir.IsEmpty(`testdata/notexist`))
+	// Output:
+	// false
+}
+
+func ExampleIsEmpty_nofiles() {
+	fmt.Println(dir.IsEmpty(`testdata/nofiles`))
+	// Output:
+	// true
+}
+
+func ExampleIsEmpty_emptyfiles() {
+	fmt.Println(dir.IsEmpty(`testdata/emptyfiles`))
+	// Output:
+	// true
+}
+
+func ExampleIsEmpty_notemptyfiles() {
+	fmt.Println(file.Size(`testdata/notemptyfiles/README.md`))
+	fmt.Println(dir.IsEmpty(`testdata/notemptyfiles`))
+	// Output:
+	// 5
+	// false
+}
+
+func ExampleIsEmpty_hiddenfiles() {
+	fmt.Println(file.Size(`testdata/hiddenfiles/.foo`))
+	fmt.Println(dir.IsEmpty(`testdata/hiddenfiles`))
+	// Output:
+	// 5
+	// false
+}

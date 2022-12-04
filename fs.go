@@ -12,8 +12,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/rwxrob/uniq"
 )
 
 // Tilde2Home expands a Tilde (~) prefix into a proper os.UserHomeDir path. If
@@ -306,11 +304,19 @@ func Preserve(target string) (string, error) {
 	if NotExists(target) {
 		return "", nil
 	}
-	nname := target + `~` + uniq.Isosec()
+	nname := target + `~` + Isosec()
 	if err := os.Rename(target, nname); err != nil {
 		return "", err
 	}
 	return nname, nil
+}
+
+// Isosec returns the GMT current time in ISO8601 (RFC3339) without
+// any punctuation or the T.  This is frequently a very good unique
+// suffix that has the added advantage of being chronologically sortable
+// and more readable than the epoch. (Also see Second())
+func Isosec() string {
+	return fmt.Sprintf("%v", time.Now().In(time.UTC).Format("20060102150405"))
 }
 
 // RevertIfMissing is designed to be called from defer after calling
