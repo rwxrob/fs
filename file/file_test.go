@@ -208,6 +208,18 @@ func ExampleTail_over() {
 	// [one two three four five]
 }
 
+func ExampleTail_negative() {
+
+	lines, err := file.Tail(`testdata/headtail`, -2)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(lines)
+
+	// Output:
+	// [three four five]
+}
+
 /*
 func ExampleRepaceAllString() {
 	err := file.ReplaceAllString(`testdata/headtail`, `three`, `THREE`)

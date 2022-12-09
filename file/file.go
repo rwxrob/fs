@@ -200,9 +200,15 @@ func Head(path string, n int) ([]string, error) {
 }
 
 // Tail is like the UNIX tail command returning only that number of
-// lines from the bottom of a file.
+// lines from the bottom of a file. If n is negative counts that many
+// lines from the top of the file (effectively the line to start from).
 func Tail(path string, n int) ([]string, error) {
-	lines := make([]string, 0, n)
+	var lines []string
+	if n >= 0 {
+		lines = make([]string, 0, n)
+	} else {
+		lines = make([]string, 0)
+	}
 	f, err := os.Open(path)
 	defer f.Close()
 	if err != nil {
@@ -214,6 +220,9 @@ func Tail(path string, n int) ([]string, error) {
 	}
 	if n > len(lines) {
 		n = len(lines)
+	}
+	if n < 0 {
+		return lines[-n:], nil
 	}
 	return lines[len(lines)-n:], nil
 }
