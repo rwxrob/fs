@@ -127,6 +127,7 @@ func execute(args ...string) error {
 // * code
 // * vim
 // * vi
+// * emacs
 // * nano
 //
 func Edit(path string) error {
@@ -147,6 +148,10 @@ func Edit(path string) error {
 		return execute(ed, path)
 	}
 	ed, _ = exec.LookPath("vi")
+	if ed != "" {
+		return execute(ed, path)
+	}
+	ed, _ = exec.LookPath("emacs")
 	if ed != "" {
 		return execute(ed, path)
 	}
