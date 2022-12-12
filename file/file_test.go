@@ -268,3 +268,9 @@ func ExampleSize() {
 	// Output:
 	// 24
 }
+
+func ExampleField() {
+	fmt.Println(file.Field(`testdata/fieldtest`, 2))
+	// Output:
+	// [foo bar baz]
+}

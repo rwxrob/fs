@@ -2,6 +2,7 @@ package file
 
 import (
 	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -318,4 +319,32 @@ func Size(path string) int64 {
 		return -1
 	}
 	return info.Size()
+}
+
+// Field returns the field (as returned by strings.Fields) from each
+// line of the file located at path (like awk '{print $1}'). Always
+// returns a slice even if empty. If that field does not exist on a line,
+// that line is omitted. Note that field count starts at 1 (not 0).
+func Field(path string, n int) []string {
+	fields := make([]string, 0)
+
+	if n <= 0 {
+		return fields
+	}
+
+	f, err := os.ReadFile(path)
+	if err != nil {
+		return fields
+	}
+
+	s := bufio.NewScanner(bytes.NewReader(f))
+	for s.Scan() {
+		f := strings.Fields(s.Text())
+		if len(f) < n {
+			continue
+		}
+		fields = append(fields, f[n-1])
+	}
+
+	return fields
 }
